@@ -15,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace Golden_Raito_ruler
 {
@@ -23,7 +24,13 @@ namespace Golden_Raito_ruler
     /// </summary>
     public partial class MainWindow : Window
     {
+        //trueだと中線で黄金比になる
         bool isFlameMode = true;
+
+        //縦横
+        byte rotation;
+
+        //黄金比
         private double GoldenRaito = 1.618034;
 
         private const int WM_SIZING = 0x214;
@@ -46,8 +53,10 @@ namespace Golden_Raito_ruler
         }
 
         public MainWindow()
-        {
+        {        
+            rotation = 0;
             InitializeComponent();
+            fix_flame_position();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -56,6 +65,7 @@ namespace Golden_Raito_ruler
             hwndSource.AddHook(WndHookProc);
         }
 
+        //アスペクトを同じにする処理
         private IntPtr WndHookProc(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             if (msg == WM_SIZING)
@@ -70,8 +80,16 @@ namespace Golden_Raito_ruler
 
                 if (isFlameMode == false)
                 {
-                    dw = (int)(h * GoldenRaito + 0.5) - w;
-                    dh = (int)(w / GoldenRaito + 0.5) - h;
+                    if (rotation % 2 == 0)
+                    {
+                        dw = (int)(h * GoldenRaito + 0.5) - w;
+                        dh = (int)(w / GoldenRaito + 0.5) - h;
+                    }
+                    else
+                    {
+                        dw = (int)(h / GoldenRaito + 0.5) - w;
+                        dh = (int)(w * GoldenRaito + 0.5) - h;
+                    }
                 }
                 else
                 {
@@ -108,81 +126,116 @@ namespace Golden_Raito_ruler
                 }
                 Marshal.StructureToPtr(r, lParam, false);
 
-                if(isFlameMode == true)
-                {
-                    goled_flame.Height = this.Height;
-                    goled_flame.Width = this.Width / GoldenRaito;
-                }
             }
             return IntPtr.Zero;
         }
 
 
+        //枠をドラッグしたときにウィンドウ位置を移動させる
         private void Flame_rectangle_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             this.DragMove();
         }
 
+        
         private void Main_flame_Loaded(object sender, RoutedEventArgs e)
         {
             this.SizeToContent = SizeToContent.Manual;
         }
 
-        private void Close_button_Click_1(object sender, RoutedEventArgs e)
+        //とじるボタン
+        private void Close_button_Click(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
 
+        //モード切り替えボタン
         private void Mode_change_Click(object sender, RoutedEventArgs e)
         {
             isFlameMode = !isFlameMode;
-            
-            if(isFlameMode == true)
+            resizeWindow();
+        }
+
+        //枠の大きさが変わったとき
+        private void Main_flame_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            grid.Width = this.Width;
+            grid.Height = this.Height;
+            fix_flame_position();
+        }
+
+        //中の線の位置を正しい位置にする
+        private void fix_flame_position()
+        {
+            double shift = (flame_line.StrokeThickness)/2;
+            switch (rotation) {
+                case 0:
+                    flame_line.X1 = (this.Width / GoldenRaito) + shift;
+                    flame_line.X2 = (this.Width / GoldenRaito) + shift;
+                    flame_line.Y1 = 0;
+                    flame_line.Y2 = this.Height;
+                    return;
+                case 1:
+                    flame_line.X1 = 0;
+                    flame_line.X2 = this.Width;
+                    flame_line.Y1 = (this.Height / GoldenRaito) - shift;
+                    flame_line.Y2 = (this.Height / GoldenRaito) - shift;
+                    return;
+                case 2:
+                    flame_line.X1 = (this.Width - (this.Width / GoldenRaito)) + shift;
+                    flame_line.X2 = (this.Width - (this.Width / GoldenRaito)) + shift;
+                    flame_line.Y1 = 0;
+                    flame_line.Y2 = this.Height;
+                    return;
+                case 3:
+                    flame_line.X1 = 0;
+                    flame_line.X2 = this.Width;
+                    flame_line.Y1 = (this.Height - (this.Height / GoldenRaito)) - shift;
+                    flame_line.Y2 = (this.Height - (this.Height / GoldenRaito)) - shift;
+                    return;
+            }
+        }
+
+        //ウィンドウのアスペクト比を正しくする
+        private void fixWindowSize()
+        {
+            if (rotation % 2 == 0)
             {
-                goled_flame.Visibility = Visibility.Visible;
+                this.Width = this.Height * GoldenRaito;
             }
             else
             {
-                goled_flame.Visibility = Visibility.Hidden;
-            }
-        }
-    }
-
-    public class flame_size : INotifyPropertyChanged
-    {
-        private double _width;
-        private double _height;
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public double width
-        {
-            get
-            {
-                return _width;
-            }
-            set
-            {
-                _width = value;
-                OnPropertyChanged("width");
+                this.Width = this.Height / GoldenRaito;
             }
         }
 
-        public double height
+        //最大化したら強制的に戻す
+        private void Main_flame_StateChanged(object sender, EventArgs e)
         {
-            get
-            {
-                return _height;
-            }
-            set
-            {
-                _height = value;
-                OnPropertyChanged("Height");
-            }
+            if (this.WindowState == WindowState.Maximized)
+                this.WindowState = WindowState.Normal;
         }
 
-        private void OnPropertyChanged(string propertyName)
+        //回転ボタンを押したとき
+        private void Rotate_button_Click(object sender, RoutedEventArgs e)
         {
-            this.PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            rotation++;
+            rotation %= 4;
+            resizeWindow();
+        }
+
+        private void resizeWindow()
+        {
+            if(isFlameMode == false)
+            {
+                flame_line.Visibility = Visibility.Hidden;
+                fixWindowSize();
+            }
+            else
+            {
+                flame_line.Visibility = Visibility.Visible;
+                fix_flame_position();
+            }
         }
     }
 }
