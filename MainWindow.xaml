@@ -1,12 +1,36 @@
-﻿<Window x:Class="Golden_Raito_ruler.MainWindow"
+﻿<Window x:Name="main_flame" x:Class="Golden_Raito_ruler.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Golden_Raito_ruler"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="300" Width="594.337" Background="Transparent" Foreground="{x:Null}" Loaded="Main_flame_Loaded" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip">
+
+    <Window.Resources>
+        <ResourceDictionary Source="caption_button.xaml"/>
+    </Window.Resources>
+    <WindowChrome.WindowChrome>
+        <WindowChrome CaptionHeight="0"
+                      ResizeBorderThickness="5" 
+                      />
+    </WindowChrome.WindowChrome>
+    <Border BorderBrush="#FFEC5454"
+            BorderThickness="16" 
+            MouseLeftButtonDown="Flame_rectangle_MouseLeftButtonDown">
+        <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Height="268" Width="562">
+            <StackPanel Background="#FFEC5454"
+                        Orientation="Horizontal" Margin="0" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top">
+                <Button x:Name="mode_change" Content="u" Style="{DynamicResource CaptionButtonStyleKey}" Click="Mode_change_Click" Margin="1,0,1,0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right" />
+                <Button x:Name="Close_button" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" Click="Close_button_Click_1" Margin="1,0,1,0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right" />
+            </StackPanel>
+            <Rectangle x:Name="goled_flame" Height="300" Margin="-16,-16,0,-16" Width="500" Stroke="#FF45238D" StrokeThickness="16" HorizontalAlignment="Left"/>
+        </Grid>
+    </Border>
+    <!--
     <Grid>
-        
+        <Rectangle x:Name="flame_rectangle" HorizontalAlignment="Left" Height="{Binding height}" Stroke="#FFEC5454" VerticalAlignment="Top" Width="{Binding width}" StrokeThickness="16" MouseLeftButtonDown="Flame_rectangle_MouseLeftButtonDown"/>
+
     </Grid>
+    -->
 </Window>
