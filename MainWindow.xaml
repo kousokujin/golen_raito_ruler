@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Golden_Raito_ruler"
         mc:Ignorable="d"
-        Title="Golden Raito Ruler" Height="316" Width="595.337" Background="Transparent" Foreground="{x:Null}" Loaded="Main_flame_Loaded" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" SizeChanged="Main_flame_SizeChanged" StateChanged="Main_flame_StateChanged" Topmost="True">
+        Title="Golden Raito Ruler" Height="316" Width="595.337" Background="Transparent" Foreground="{x:Null}" Loaded="Main_flame_Loaded" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" SizeChanged="Main_flame_SizeChanged" StateChanged="Main_flame_StateChanged" Topmost="True" BorderThickness="1">
 
     <Window.Resources>
         <ResourceDictionary Source="flame_resorce.xaml"/>
