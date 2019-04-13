@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using System.Xml.Serialization;
 
 namespace Golden_Raito_ruler
 {
@@ -56,7 +57,9 @@ namespace Golden_Raito_ruler
         {        
             rotation = 0;
             InitializeComponent();
-            fix_flame_position();
+            loadSetting();
+            resizeWindow();
+            //saveSetting();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -146,6 +149,7 @@ namespace Golden_Raito_ruler
         //とじるボタン
         private void Close_button_Click(object sender, RoutedEventArgs e)
         {
+            saveSetting();
             this.Close();
         }
 
@@ -237,5 +241,74 @@ namespace Golden_Raito_ruler
                 fix_flame_position();
             }
         }
+
+        //設定ファイルの保存
+        public void saveSetting()
+        {
+            Point pt = this.PointToScreen(new Point(0.0d, 0.0d));
+            int flame = 0;
+            if (isFlameMode == true) flame = 1;
+
+            SettingData data = new SettingData
+            {
+                x = pt.X,
+                y = pt.Y,
+                width = this.Width,
+                height = this.Height,
+                FlameMode = flame,
+                rotation = this.rotation
+            };
+
+            XmlFileIO.xmlSave(data.GetType(), "config.xml", data);
+        }
+
+        //設定ファイルの読み込み
+        public void loadSetting()
+        {
+            object data = new SettingData();
+            File_Status status =　XmlFileIO.xmlLoad(data.GetType(), "config.xml" ,out data);
+
+            if(status == File_Status.sucsess)
+            {
+                SettingData castData = (SettingData)data;
+                this.Left = castData.x;
+                this.Top = castData.y;
+                this.Width = castData.width;
+                this.Height = castData.height;
+                this.rotation = (byte)castData.rotation;
+
+                if(castData.FlameMode == 1)
+                {
+                    this.isFlameMode = true;
+                }
+                else
+                {
+                    this.isFlameMode = false;
+                }
+            }
+        }
     }
+
+    [XmlRoot("SettingData")]
+    public class SettingData
+    {
+        [XmlElement("x")]
+        public double x { get; set; }
+
+        [XmlElement("y")]
+        public double y { get; set; }
+
+        [XmlElement("width")]
+        public double width { get; set; }
+
+        [XmlElement("height")]
+        public double height { get; set; }
+
+        [XmlElement("FlameMode")]
+        public int FlameMode { get; set; }
+
+        [XmlElement("rotation")]
+        public int rotation { get; set; }
+    }
+
 }
