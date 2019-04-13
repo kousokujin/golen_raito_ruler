@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Golden_Raito_ruler"
         mc:Ignorable="d"
-        Title="Golden Raito Ruler" Height="300" Width="594.337" Background="Transparent" Foreground="{x:Null}" Loaded="Main_flame_Loaded" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" SizeChanged="Main_flame_SizeChanged" StateChanged="Main_flame_StateChanged" Topmost="True">
+        Title="Golden Raito Ruler" Height="316" Width="595.337" Background="Transparent" Foreground="{x:Null}" Loaded="Main_flame_Loaded" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" SizeChanged="Main_flame_SizeChanged" StateChanged="Main_flame_StateChanged" Topmost="True">
 
     <Window.Resources>
         <ResourceDictionary Source="flame_resorce.xaml"/>
@@ -17,20 +17,22 @@
     </WindowChrome.WindowChrome>
     <Border x:Name="border_line"
             MouseLeftButtonDown="Flame_rectangle_MouseLeftButtonDown">
-        <Grid x:Name="grid" VerticalAlignment="Top" HorizontalAlignment="Right" Height="268" Width="562">
+        <Grid x:Name="grid" Margin="-16">
             <StackPanel
-                Orientation="Horizontal" Margin="0" Height="18" HorizontalAlignment="Right" VerticalAlignment="Top">
-                <Button x:Name="rotate_button" Content="n" Style="{DynamicResource CaptionButtonStyleKey}"  Margin="1,0,1,0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right" Click="Rotate_button_Click">
-                    <ToolTipService.ToolTip>
-                        <ToolTip Content="回転"/>
-                    </ToolTipService.ToolTip>
-                </Button>
-                <Button x:Name="mode_change" Content="u" Style="{DynamicResource CaptionButtonStyleKey}" Click="Mode_change_Click" Margin="1,0,1,0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right">
+                Orientation="Horizontal" Height="16" Width="47" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,16,16,0">
+
+
+                <Button x:Name="mode_change" Content="u" Style="{DynamicResource CaptionButtonStyleKey}" Click="Mode_change_Click" Margin="1,0,1,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Center">
                     <ToolTipService.ToolTip>
                         <ToolTip Content="切り替え"/>
                     </ToolTipService.ToolTip>
                 </Button>
-                <Button x:Name="Close_button" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" Click="Close_button_Click" Margin="1,0,1,0" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Right">
+                <Button x:Name="rotate_button" Content="n" Style="{DynamicResource CaptionButtonStyleKey}"  Margin="1,0,1,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" Click="Rotate_button_Click" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <ToolTipService.ToolTip>
+                        <ToolTip Content="回転"/>
+                    </ToolTipService.ToolTip>
+                </Button>
+                <Button x:Name="Close_button" Content="r" Style="{DynamicResource CaptionButtonStyleKey}" Click="Close_button_Click" Margin="1,0,1,0" VerticalContentAlignment="Center" HorizontalContentAlignment="Right" VerticalAlignment="Center" HorizontalAlignment="Right">
                     <ToolTipService.ToolTip>
                         <ToolTip Content="閉じる"/>
                     </ToolTipService.ToolTip>

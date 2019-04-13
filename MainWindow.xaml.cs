@@ -170,8 +170,8 @@ namespace Golden_Raito_ruler
             double shift = (flame_line.StrokeThickness)/2;
             switch (rotation) {
                 case 0:
-                    flame_line.X1 = (this.Width / GoldenRaito) + shift;
-                    flame_line.X2 = (this.Width / GoldenRaito) + shift;
+                    flame_line.X1 = (this.Width / GoldenRaito) - shift;
+                    flame_line.X2 = (this.Width / GoldenRaito) - shift;
                     flame_line.Y1 = 0;
                     flame_line.Y2 = this.Height;
                     return;
@@ -182,8 +182,8 @@ namespace Golden_Raito_ruler
                     flame_line.Y2 = (this.Height / GoldenRaito) - shift;
                     return;
                 case 2:
-                    flame_line.X1 = (this.Width - (this.Width / GoldenRaito)) + shift;
-                    flame_line.X2 = (this.Width - (this.Width / GoldenRaito)) + shift;
+                    flame_line.X1 = (this.Width - (this.Width / GoldenRaito)) - shift;
+                    flame_line.X2 = (this.Width - (this.Width / GoldenRaito)) - shift;
                     flame_line.Y1 = 0;
                     flame_line.Y2 = this.Height;
                     return;

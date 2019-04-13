@@ -7,11 +7,11 @@
 
     <Style TargetType="Border">
         <Setter Property="BorderBrush" Value="{StaticResource Default_LineColor}"/>
-        <Setter Property="BorderThickness" Value="10"/>
+        <Setter Property="BorderThickness" Value="16"/>
     </Style>
     <Style TargetType="Line">
         <Setter Property="Stroke" Value="{StaticResource Default_LineColor}"/>
-        <Setter Property="StrokeThickness" Value="10"/>
+        <Setter Property="StrokeThickness" Value="16"/>
     </Style>
     <Style TargetType="StackPanel">
         <Setter Property="Background" Value="{StaticResource Default_LineColor}"/>
