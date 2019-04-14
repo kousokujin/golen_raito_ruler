@@ -64,24 +64,32 @@ namespace Golden_Raito_ruler
             resizeWindow();
             //saveSetting();
 
-            comunication = new IpcComunication();
-            var isServer = comunication.startServer_isExist("stop");
-            if (isServer == true)
+            IpcServer server = new IpcServer();
+            bool server_ok = server.startServer("run");
+
+            if(server_ok == false)
             {
-                comunication.MessageReceive += eventIpc;
+                IpcClient client = new IpcClient();
+                client.startClient("stop");
+                this.Close();
             }
             else
             {
-                this.Close();
+                server.MessageReceive += eventIpc;
+                comunication = server;
+
             }
-            //comunication.shareData.status = "start";
         }
 
         //ipcの値が変わったとき
         void eventIpc(object sender,EventArgs e)
         {
-            Console.WriteLine("valuechanged");
-            Width = 1000;
+            this.Dispatcher.Invoke((Action)(() =>
+            {
+                saveSetting();
+                this.Close();
+            }));
+            //Width = 1000;
         }
 
         protected override void OnSourceInitialized(EventArgs e)

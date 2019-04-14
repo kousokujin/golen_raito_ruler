@@ -14,28 +14,23 @@ namespace Golden_Raito_ruler
 
     class IpcComunication
     {
-        private IpcServerChannel SrvChannel;
-        private IpcClientChannel CltChannel;
+        //private IpcServerChannel SrvChannel;
+        //private IpcClientChannel CltChannel;
 
         /// <summary>
         /// プロセス間通信で共有するクラス
         /// </summary>
         public IpcDataClass shareData;
 
-        private const string channel_name = "Golden_Raito_Ruler";
-        private const string channel_public_name = "status";
-
-        /// <summary>
-        /// このインスタンスがサーバとして動作している場合はtrue
-        /// </summary>
-        public bool isServer;
+        protected const string channel_name = "Golden_Raito_Ruler";
+        protected const string channel_public_name = "status";
 
         /// <summary>
         /// パラメータが変わったとき
         /// </summary>
         public event EventHandler MessageReceive;
 
-        private string address
+        protected string address
         {
             get
             {
@@ -43,37 +38,58 @@ namespace Golden_Raito_ruler
             }
         }
 
-        /// <summary>
-        /// ipcサーバを開始。
-        /// </summary>
-        public void startServer()
-        {
-            isServer = true;
-
-            shareData = new IpcDataClass
-            {
-                status = "run"
-            };
-            SrvChannel = new IpcServerChannel(channel_name);
-            ChannelServices.RegisterChannel(SrvChannel, true);
-            RemotingServices.Marshal(shareData, channel_public_name);
-
-            shareData.changeValue += recieve;
-            //shareData.callEvent();
-        }
-
-        private void recieve(object sender, EventArgs e)
+        protected void recieve(object sender, EventArgs e)
         {
             MessageReceive?.Invoke(sender, e);
         }
 
+    }
+
+    class IpcServer : IpcComunication
+    {
+        private IpcServerChannel SrvChannel;
+
+        /// <summary>
+        /// ipcサーバを開始。
+        /// </summary>
+        /// <returns>サーバの開始に成功した場合はtrue</returns>
+        public bool startServer(string mes="")
+        {
+
+            shareData = new IpcDataClass
+            {
+                status = mes
+            };
+
+            try
+            {
+                SrvChannel = new IpcServerChannel(channel_name);
+                ChannelServices.RegisterChannel(SrvChannel, true);
+                RemotingServices.Marshal(shareData, channel_public_name);
+
+                shareData.changeValue += recieve;
+            }
+            catch(RemotingException)
+            {
+                return false;
+            }
+            //shareData.callEvent();
+
+            return true;
+        }
+
+    }
+
+    class IpcClient :IpcComunication
+    {
+
+        private IpcClientChannel CltChannel;
         /// <summary>
         /// ipcクライアントとして接続。サーバが起動されてない場合はfalseを返す。
         /// </summary>
         /// <returns>サーバが起動してるか</returns>
         public bool startClient(string status = "")
         {
-            isServer = false;
 
             CltChannel = new IpcClientChannel();
             ChannelServices.RegisterChannel(CltChannel, true);
@@ -87,6 +103,8 @@ namespace Golden_Raito_ruler
                     shareData.status = status;
                     //shareData.callEvent();
                 }
+
+                //shareData.changeValue += recieve;
             }
             catch (ArgumentException)
             {
@@ -103,23 +121,6 @@ namespace Golden_Raito_ruler
             }
 
             return true;
-        }
-
-        /// <summary>
-        /// サーバが存在しない場合はサーバとして起動
-        /// </summary>
-        /// <returns>サーバとして起動した場合はtrue</returns>
-        public bool startServer_isExist(string status = "")
-        {
-            bool isExist = startClient(status);
-
-            if (isExist == false)
-            {
-                startServer();
-                return true;
-            }
-
-            return false;
         }
     }
 }
