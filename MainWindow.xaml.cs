@@ -34,6 +34,9 @@ namespace Golden_Raito_ruler
         //黄金比
         private double GoldenRaito = 1.618034;
 
+        //ipcサーバ
+        private IpcComunication comunication;
+
         private const int WM_SIZING = 0x214;
         private const int WMSZ_LEFT = 1;
         private const int WMSZ_RIGHT = 2;
@@ -60,6 +63,25 @@ namespace Golden_Raito_ruler
             loadSetting();
             resizeWindow();
             //saveSetting();
+
+            comunication = new IpcComunication();
+            var isServer = comunication.startServer_isExist("stop");
+            if (isServer == true)
+            {
+                comunication.MessageReceive += eventIpc;
+            }
+            else
+            {
+                this.Close();
+            }
+            //comunication.shareData.status = "start";
+        }
+
+        //ipcの値が変わったとき
+        void eventIpc(object sender,EventArgs e)
+        {
+            Console.WriteLine("valuechanged");
+            Width = 1000;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
