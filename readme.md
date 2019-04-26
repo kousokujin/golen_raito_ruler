@@ -1,5 +1,5 @@
 # Golden Raito Ruler
-<img src="https://raw.githubusercontent.com/kousokujin/golen_raito_ruler/master/readme_pic/flame_mode.png" witdh="300px">
+<img src="https://raw.githubusercontent.com/kousokujin/golen_raito_ruler/master/readme_pic/flame_mode.png" width="300px">
 
 ## これはなに?
 世界一美しい比率とされている黄金比を画面上に表示します。
